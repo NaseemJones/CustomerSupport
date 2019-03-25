@@ -1,6 +1,6 @@
 package com.wrox;
 
-
+import java.sql.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,11 +20,28 @@ public class LoginServlet extends HttpServlet
     private static final Map<String, String> userDatabase = new Hashtable<>();
 
     static {
-        userDatabase.put("Nicholas", "password");
-        userDatabase.put("Sarah", "drowssap");
-        userDatabase.put("Mike", "wordpass");
-        userDatabase.put("John", "green");
-    }
+    	try {
+    		Class.forName("com.mysql.jdbc.Driver");
+    		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/customersupport","root","password");
+    		
+    		Statement stmt=con.createStatement();  
+    		ResultSet rs=stmt.executeQuery("select Email, password from USER");  
+    		while(rs.next()) 
+    		userDatabase.put(rs.getString(1),rs.getString(2));
+    		userDatabase.put(rs.getString(3),rs.getString(4));
+    		userDatabase.put(rs.getString(5),rs.getString(6));
+    		con.close();  
+    		}catch(Exception e){ System.out.println(e);}  
+    		}  
+    		
+    
+
+    	
+        //userDatabase.put("Nicholas", "password");
+       // userDatabase.put("Sarah", "drowssap");
+       // userDatabase.put("Mike", "wordpass");
+       // userDatabase.put("John", "green");	
+    
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
